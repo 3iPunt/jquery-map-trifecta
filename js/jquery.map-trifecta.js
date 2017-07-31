@@ -12,15 +12,15 @@ var settings;
 * https://github.com/stowball/jQuery-rwdImageMaps
 * http://mattstow.com
 * Licensed under the MIT license
-* 
+*
 * Edited By: Nicholas S Wilhelm
 * Added setTimeout(rwdImageMap, 500);
-* 
+*
 */
 (function ($) {
     $.fn.rwdImageMaps = function () {
         var $img = this,
-		version = parseFloat($.fn.jquery);
+            version = parseFloat($.fn.jquery);
 
         var rwdImageMap = function () {
 
@@ -29,22 +29,22 @@ var settings;
                     return;
 
                 var that = this,
-				$that = $(that);
+                    $that = $(that);
 
                 // Since WebKit doesn't know the height until after the image has loaded, perform everything in an onload copy
                 $('<img />').load(function () {
                     var w,
-					h,
-					attrW = 'width',
-					attrH = 'height';
+                        h,
+                        attrW = 'width',
+                        attrH = 'height';
 
                     // jQuery < 1.6 incorrectly uses the actual image width/height instead of the attribute's width/height
                     if (version < 1.6)
                         w = that.getAttribute(attrW),
-						h = that.getAttribute(attrH);
+                            h = that.getAttribute(attrH);
                     else
                         w = $that.attr(attrW),
-						h = $that.attr(attrH);
+                            h = $that.attr(attrH);
 
                     if (!w || !h) {
                         var temp = new Image();
@@ -56,9 +56,9 @@ var settings;
                     }
 
                     var wPercent = $that.width() / 100,
-					hPercent = $that.height() / 100,
-					map = $that.attr('usemap').replace('#', ''),
-					c = 'coords';
+                        hPercent = $that.height() / 100,
+                        map = $that.attr('usemap').replace('#', ''),
+                        c = 'coords';
 
                     $('map[name="' + map + '"]').find('area').each(function () {
                         var $this = $(this);
@@ -66,7 +66,7 @@ var settings;
                             $this.data(c, $this.attr(c));
 
                         var coords = $this.data(c).split(','),
-						coordsPercent = new Array(coords.length);
+                            coordsPercent = new Array(coords.length);
 
                         for (var i = 0; i < coordsPercent.length; ++i) {
                             if (i % 2 === 0)
@@ -93,7 +93,7 @@ var settings;
 // maphilight
 (function ($) {
     var has_VML, has_canvas, create_canvas_for, add_shape_to, clear_canvas, shape_from_area,
-	canvas_style, hex_to_decimal, css3color, is_image_loaded, options_from_area;
+        canvas_style, hex_to_decimal, css3color, is_image_loaded, options_from_area;
 
     var margin_left;
 
@@ -302,14 +302,14 @@ var settings;
     };
 
     /*
-	canvas_style = {
-		position: 'absolute',
-		left: 0,
-		top: 0,
-		padding: 0,
-		border: 0
-	};
-	*/
+    canvas_style = {
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        padding: 0,
+        border: 0
+    };
+    */
     canvas_style = {};
 
     var ie_hax_done = false;
@@ -321,10 +321,10 @@ var settings;
             var style = document.createStyleSheet();
             var shapes = ['shape', 'rect', 'oval', 'circ', 'fill', 'stroke', 'imagedata', 'group', 'textbox'];
             $.each(shapes,
-				function () {
-				    style.addRule('v\\:' + this, "behavior: url(#default#VML); antialias:true");
-				}
-			);
+                function () {
+                    style.addRule('v\\:' + this, "behavior: url(#default#VML); antialias:true");
+                }
+            );
             ie_hax_done = true;
         }
 
@@ -392,7 +392,7 @@ var settings;
 
             img.before(wrap).css('opacity', 1).css(canvas_style).remove();
             if (has_VML) {
-                //img.css('filter', 'Alpha(opacity=1)'); 
+                //img.css('filter', 'Alpha(opacity=1)');
             }
             wrap.append(img);
 
@@ -406,10 +406,10 @@ var settings;
                 var shape, area_options;
                 area_options = options_from_area(this, options);
                 if (
-				!area_options.neverOn
-				&&
-				!area_options.alwaysOn
-				) {
+                    !area_options.neverOn
+                    &&
+                    !area_options.alwaysOn
+                ) {
                     shape = shape_from_area(this);
 
                     add_shape_to(canvas, shape[0], shape[1], area_options, "highlighted");
@@ -478,8 +478,14 @@ var settings;
 
 
             $(map).trigger('alwaysOn.maphilight').find('area[coords]')
-			.bind('mouseover.maphilight', mouseover)
-			.bind('mouseout.maphilight', function (e) { clear_canvas(canvas); });
+                .bind('mouseover.maphilight', mouseover)
+                .bind('mouseout.maphilight', function (e) {
+                    //abertranb 201707127 always hilight it!!!
+                    var area_options = options_from_area(this, options);
+                    if (!area_options.alwaysOn) {
+                        clear_canvas(canvas);
+                    }
+                });
 
             //img.before(canvas); // if we put this after, the mouseover events wouldn't fire.
 
@@ -489,6 +495,7 @@ var settings;
                 .css("margin-left", "auto")
                 .css("margin-right", "auto")
                 .css("position", "relative")
+                .css("", "")
                 .addClass('map')
                 .addClass('maphilighted');
         });
@@ -545,14 +552,14 @@ var settings;
     // Core Zoom Logic, independent of event listeners.
     $.zoom = function (target, source, img, magnify) {
         var targetHeight,
-			targetWidth,
-			sourceHeight,
-			sourceWidth,
-			xRatio,
-			yRatio,
-			offset,
-			position = $(target).css('position'),
-			$source = $(source);
+            targetWidth,
+            sourceHeight,
+            sourceWidth,
+            xRatio,
+            yRatio,
+            offset,
+            position = $(target).css('position'),
+            $source = $(source);
 
         // The parent element needs positioning so that the zoomed element can be correctly positioned within.
         target.style.position = /(absolute|fixed)/.test(position) ? position : 'relative';
@@ -561,20 +568,20 @@ var settings;
         img.style.width = img.style.height = '';
 
         $(img)
-			.addClass('zoomImg')
-			.css({
-			    position: 'absolute',
-			    top: 0,
-			    left: 0,
-			    opacity: 0,
-			    width: img.width * magnify,
-			    height: img.height * magnify,
-			    border: 'none',
-			    maxWidth: 'none',
-			    maxHeight: 'none',
-			    display: 'none'
-			})
-			.appendTo(target);
+            .addClass('zoomImg')
+            .css({
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                opacity: 0,
+                width: img.width * magnify,
+                height: img.height * magnify,
+                border: 'none',
+                maxWidth: 'none',
+                maxHeight: 'none',
+                display: 'none'
+            })
+            .appendTo(target);
 
         return {
             init: function () {
@@ -596,7 +603,7 @@ var settings;
             },
             move: function (e) {
                 var left = (e.pageX - offset.left),
-					top = (e.pageY - offset.top);
+                    top = (e.pageY - offset.top);
 
                 top = Math.max(Math.min(top, sourceHeight), 0);
                 left = Math.max(Math.min(left, sourceWidth), 0);
@@ -610,18 +617,18 @@ var settings;
     $.fn.zoom = function (options) {
         return this.each(function () {
             var
-			settings = $.extend({}, defaults, options || {}),
-			//target will display the zoomed image
-			target = settings.target || this,
-			//source will provide zoom location info (thumbnail)
-			source = this,
-			$source = $(source),
-			img = document.createElement('img'),
-			$img = $(img),
-			mousemove = 'mousemove.zoom',
-			clicked = false,
-			touched = false,
-			$urlElement;
+                settings = $.extend({}, defaults, options || {}),
+                //target will display the zoomed image
+                target = settings.target || this,
+                //source will provide zoom location info (thumbnail)
+                source = this,
+                $source = $(source),
+                img = document.createElement('img'),
+                $img = $(img),
+                mousemove = 'mousemove.zoom',
+                clicked = false,
+                touched = false,
+                $urlElement;
 
             // If a url wasn't specified, look for an image element.
             if (!settings.url) {
@@ -659,13 +666,13 @@ var settings;
                     // Skip the fade-in for IE8 and lower since it chokes on fading-in
                     // and changing position based on mousemovement at the same time.
                     $img.stop()
-					.fadeTo($.support.opacity ? settings.duration : 0, 1, $.isFunction(settings.onZoomIn) ? settings.onZoomIn.call(img) : false);
+                        .fadeTo($.support.opacity ? settings.duration : 0, 1, $.isFunction(settings.onZoomIn) ? settings.onZoomIn.call(img) : false);
                 }
 
                 function stop() {
 
                     $img.stop()
-					.fadeTo(settings.duration, 0, $.isFunction(settings.onZoomOut) ? settings.onZoomOut.call(img) : false);
+                        .fadeTo(settings.duration, 0, $.isFunction(settings.onZoomOut) ? settings.onZoomOut.call(img) : false);
 
                     setTimeout(function () { $('.zoomImg').css("display", "none"); $("#toZoom").removeClass("zoom"); }, 250);
 
@@ -674,25 +681,25 @@ var settings;
                 // Mouse events
                 if (settings.on === 'dblclick') {
                     $source.on('dblclick.zoom',
-						function (e) {
-						    if (clicked) {
-						        // bubble the event up to the document to trigger the unbind.
-						        return;
-						    } else {
-						        clicked = true;
-						        start(e);
-						        $(document).on(mousemove, zoom.move);
-						        $(document).one('dblclick.zoom',
-									function () {
-									    stop();
-									    clicked = false;
-									    $(document).off(mousemove, zoom.move);
-									}
-								);
-						        return false;
-						    }
-						}
-					);
+                        function (e) {
+                            if (clicked) {
+                                // bubble the event up to the document to trigger the unbind.
+                                return;
+                            } else {
+                                clicked = true;
+                                start(e);
+                                $(document).on(mousemove, zoom.move);
+                                $(document).one('dblclick.zoom',
+                                    function () {
+                                        stop();
+                                        clicked = false;
+                                        $(document).off(mousemove, zoom.move);
+                                    }
+                                );
+                                return false;
+                            }
+                        }
+                    );
                 }
 
                 if ($.isFunction(settings.callback)) {
@@ -713,44 +720,46 @@ var partsArr = [];
 // Created By: Nicholas S Wilhelm
 // Sets up Responsive, Hilight for Map & Table
 (function ($) {
-    $.fn.setMapTable = function () {
+    $.fn.setMapTable = function (alwaysOn) {
 
         // Hilight table row on area part hover
         $('area').hover(function () {
 
-            var id = $(this).attr('data-mapid');
-            selectRowAndPart(id, true);
+                var id = $(this).attr('data-mapid');
+                selectRowAndPart(id, true);
 
-        },
-              function () {
+            },
+            function () {
 
-                  var id = $(this).attr('data-mapid');
-                  var isSelected = $.inArray(id, partsArr);
-                  if (isSelected == -1) {
-                      selectRowAndPart(id, false);
-                  }
-              }
-            );
+                if (!alwaysOn) {
+                    var id = $(this).attr('data-mapid');
+                    var isSelected = $.inArray(id, partsArr);
+                    if (isSelected == -1) {
+                        selectRowAndPart(id, false);
+                    }
+                }
+            }
+        );
 
         // Hilight area part on table row hover
         $('tr').hover(function () {
 
-            var id = $(this).attr('data-mapid');
-            var data = $("area[data-mapid=" + id + "]").data('maphilight');
+                var id = $(this).attr('data-mapid');
+                var data = $("area[data-mapid=" + id + "]").data('maphilight');
 
-            if (data === undefined || !data.alwaysOn) {
-                selectRowAndPart(id, true);
+                if (data === undefined || !data.alwaysOn) {
+                    selectRowAndPart(id, true);
+                }
+            },
+            function () {
+
+                var id = $(this).attr('data-mapid');
+                var isSelected = $.inArray(id, partsArr);
+                if (isSelected == -1) {
+                    selectRowAndPart(id, false);
+                }
             }
-        },
-              function () {
-
-                  var id = $(this).attr('data-mapid');
-                  var isSelected = $.inArray(id, partsArr);
-                  if (isSelected == -1) {
-                      selectRowAndPart(id, false);
-                  }
-              }
-            );
+        );
 
         // Remove All Selected Rows And Parts
         $('html').on('click', function (e) {
@@ -763,43 +772,12 @@ var partsArr = [];
                     partsArr = [];
                 }
             }
-        });
+            //abertranb 201707127 always hilight it!!!
+            /*var area_options = options_from_area(this, options);
+            if (area_options.alwaysOn) {
+                mouseover(e);
+            }*/
 
-        // Hilight and keep selected
-        $('area, tr').on('click', function (e) {
-
-            var $parent = $(e.target).parent();
-            if (!$parent.is('a')) {
-                var id = $(this).attr('data-mapid');
-
-                if (e.ctrlKey) {
-                    // Add to Array, multiple selection
-                    var index = jQuery.inArray(id, partsArr);
-                    if (index > -1) {
-                        // remove part
-                        partsArr.splice(index, 1);
-                        removeAllSelectedRowsAndParts();
-                        partsArr.forEach(function (item) {
-                            selectRowAndPart(item, true);
-                        });
-                    }
-                    else {
-                        // add part
-                        partsArr.push(id);
-                        selectRowAndPart(id, true);
-                    }
-                }
-                else {
-                    // Remove all rom Array, singular selection
-                    removeAllSelectedRowsAndParts();
-                    selectRowAndPart(id, true);
-
-                    partsArr = [];
-                    partsArr.push(id);
-                }
-            }
-
-            return false;
         });
 
     };
@@ -835,9 +813,9 @@ function selectRowAndPart(id, select) {
 
         /*** MapLight ***/
         fill: true,
-        fillColor: 'FF0000',
-        fillOpacity: 0.1,
-        stroke: true,
+        fillColor: 'fff000',
+        fillOpacity: 0.4,
+        stroke: false,
         strokeColor: 'FF0000',
         strokeOpacity: 1,
         strokeWidth: 1,
@@ -862,8 +840,8 @@ function selectRowAndPart(id, select) {
         $imageMap = this;
         settings = $.extend({}, defaults, options || {}),
 
-        // Set up Image Map
-        $imageMap.maphilight(settings);
+            // Set up Image Map
+            $imageMap.maphilight(settings);
         $imageMap.rwdImageMaps();
 
         // Set up Zoom
@@ -878,7 +856,9 @@ function selectRowAndPart(id, select) {
 
         // Set up Table
         if (settings.table) {
-            $().setMapTable();
+            //abertranb
+            //$().setMapTable();
+            $().setMapTable(settings.alwaysOn);
         }
 
         return this;
@@ -888,20 +868,20 @@ function selectRowAndPart(id, select) {
 
 // This keeps the Hilight moving with the Image Map during browser resizing
 jQuery(window).bind('resize', function (e) {
-    
-        window.resizeEvt;
-        jQuery(window).resize(function () {
-            clearTimeout(window.resizeEvt);
-            window.resizeEvt = setTimeout(function () {
-                try {
-                    $imageMap.maphilight(settings);
 
-                    var width = $imageMap.width();
-                    $('#toZoom').width(width);
-                } catch (e) {
-                    console.error(e.message);
-                }
-            }, 10);
-        });
-    
+    window.resizeEvt;
+    jQuery(window).resize(function () {
+        clearTimeout(window.resizeEvt);
+        window.resizeEvt = setTimeout(function () {
+            try {
+                $imageMap.maphilight(settings);
+
+                var width = $imageMap.width();
+                $('#toZoom').width(width);
+            } catch (e) {
+                console.error(e.message);
+            }
+        }, 10);
+    });
+
 });
